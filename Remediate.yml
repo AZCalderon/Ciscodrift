@@ -1,6 +1,6 @@
 ---
 - name: Check and remediate configuration drift on Cisco switch
-  hosts: 172.16.5.22
+  hosts: switch2
   gather_facts: no
   tasks:
 
