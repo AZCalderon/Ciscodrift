@@ -20,10 +20,11 @@
         src: /tmp/cisco_config_repo/golden.txt
       register: desired_config
 
-    - name: Convert current and desired configuration to plain text
+    - name: Remove comment lines and normalize configurations
       set_fact:
-        current_config_text: "{{ running_config.stdout[0].splitlines() | join('\n') }}"
-        desired_config_text: "{{ desired_config.content | b64decode }}"
+        normalized_current_config: "{{ running_config.stdout[0] | splitlines() | select('match', '^\\s*[^!].*') | map('regex_replace', '\\s+', ' ') | join('\n') }}"
+        normalized_desired_config: "{{ desired_config.content | b64decode | splitlines() | select('match', '^\\s*[^!].*') | map('regex_replace', '\\s+', ' ') | join('\n') }}"
+        config_drift_detected: "{{ normalized_current_config != normalized_desired_config }}"
 
     - name: Compare current and desired configurations
       set_fact:
