@@ -31,7 +31,7 @@
 
     - name: Print message if configuration drift is detected
       debug:
-        msg: "Configuration drift detected on {{ switch2 }}. Applying remediation..."
+        msg: "Configuration drift detected on {{ dgreen-eve }}. Applying remediation..."
       when: config_drift_detected
 
     - name: Apply desired configuration from Git to the switch
