@@ -44,6 +44,11 @@
         save_when: modified
       when: config_drift_detected
 
+    - name: Print message if no configuration drift is detected
+      debug:
+        msg: "No configuration drift detected on {{ inventory_hostname }}. Configuration is up to date."
+      when: not config_drift_detected
+
     - name: Clean up temporary files
       file:
         path: /tmp/cisco_config_repo
