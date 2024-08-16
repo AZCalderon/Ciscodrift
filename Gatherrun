@@ -1,5 +1,5 @@
 - name: Gather Cisco switch running config
-  hosts: cisco_switches
+  hosts: switch2
   gather_facts: no
   tasks:
     - name: Get current running config
@@ -10,4 +10,4 @@
     - name: Save current config to a file
       copy:
         content: "{{ current_config.stdout[0] }}"
-        dest: "/path/to/save/current_config.txt"
+        dest: "chcalder@eda:~$ home/chcalder/running"
