@@ -1,0 +1,50 @@
+---
+- name: Check and remediate configuration drift on Cisco switch
+  hosts: cisco_switch
+  gather_facts: no
+  tasks:
+
+    - name: Clone the Git repository containing the desired configuration
+      git:
+        repo: 'https://github.com/AZCalderon/Ciscodrift.git'
+        dest: /tmp/cisco_config_repo
+        version: main  # Use the branch where your config is stored
+
+    - name: Retrieve current running configuration from the switch
+      ios_command:
+        commands: show running-config
+      register: running_config
+
+    - name: Load desired configuration from Git
+      slurp:
+        src: /tmp/cisco_config_repo/golden.txt
+      register: desired_config
+
+    - name: Convert current and desired configuration to plain text
+      set_fact:
+        current_config_text: "{{ running_config.stdout[0].splitlines() | join('\n') }}"
+        desired_config_text: "{{ desired_config.content | b64decode }}"
+
+    - name: Compare current and desired configurations
+      set_fact:
+        config_drift_detected: "{{ current_config_text != desired_config_text }}"
+
+    - name: Print message if configuration drift is detected
+      debug:
+        msg: "Configuration drift detected on {{ switch2 }}. Applying remediation..."
+      when: config_drift_detected
+
+    - name: Apply desired configuration from Git to the switch
+      ios_config:
+        lines: "{{ desired_config_text.splitlines() }}"
+      when: config_drift_detected
+
+    - name: Save the configuration if changes were made
+      ios_config:
+        save_when: modified
+      when: config_drift_detected
+
+    - name: Clean up temporary files
+      file:
+        path: /tmp/cisco_config_repo
+        state: absent
