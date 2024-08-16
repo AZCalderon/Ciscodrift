@@ -1,0 +1,13 @@
+- name: Gather Cisco switch running config
+  hosts: cisco_switches
+  gather_facts: no
+  tasks:
+    - name: Get current running config
+      cisco.ios.ios_command:
+        commands: show running-config
+      register: current_config
+
+    - name: Save current config to a file
+      copy:
+        content: "{{ current_config.stdout[0] }}"
+        dest: "/path/to/save/current_config.txt"
