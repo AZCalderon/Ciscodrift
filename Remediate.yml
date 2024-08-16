@@ -20,7 +20,7 @@
         src: /tmp/cisco_config_repo/golden.txt
       register: desired_config
 
-     - name: Convert current and desired configuration to plain text
+    - name: Convert current and desired configuration to plain text
       set_fact:
         current_config_text: "{{ running_config.stdout[0].splitlines() | join('\n') }}"
         desired_config_text: "{{ desired_config.content | b64decode }}"
