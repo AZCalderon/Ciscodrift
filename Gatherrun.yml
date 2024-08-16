@@ -1,3 +1,4 @@
+---
 - name: Gather Cisco switch running config
   hosts: switch2
   gather_facts: no
