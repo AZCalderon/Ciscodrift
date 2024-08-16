@@ -11,4 +11,4 @@
     - name: Save current config to a file
       copy:
         content: "{{ current_config.stdout[0] }}"
-        dest: "home/chcalder/running/current_config.txt"
+        dest: "chcalder/running/current_config.txt"
