@@ -6,7 +6,7 @@
 
     - name: Clone the Git repository containing the desired configuration
       git:
-        repo: 'https://github.com/AZCalderon/Ciscodrift/blob/main/Remediate.yml'
+        repo: 'https://github.com/AZCalderon/Ciscodrift'
         dest: /tmp/cisco_config_repo
         version: main  # Use the branch where your config is stored
 
